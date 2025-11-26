@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riquelme Encurta - Encurtador Premium</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #00ff88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: 600;
+            background: linear-gradient(90deg, #00ff88, #00d4ff, #00ff88);
+            background-size: 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 2s ease infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Premium Particles Canvas */
+        #particlesCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Premium Header */
+        header {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0, 255, 136, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #00ff88;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.6),
+                        0 0 80px rgba(0, 255, 136, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0, 255, 136, 0.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(0, 255, 136, 0.8); }
+        }
+
+        h1 {
+            position: relative;
+            z-index: 2;
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+        }
+
+        /* Premium Glass Card */
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 50px;
+            margin: 30px 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 255, 136, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #00ff88;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            font-size: 16px;
+            color: #fff;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00ff88;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Premium Buttons */
+        .btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn:hover::before {
+            width: 300%;
+            height: 300%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff00ff 0%, #ff6b9d 100%);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.4);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 15px 40px rgba(255, 0, 255, 0.6);
+        }
+
+        /* Premium Rankings */
+        .ranking-badge {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin: 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .ranking-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .bronze { background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%); }
+        .platina { background: linear-gradient(135deg, #e5e4e2 0%, #bcc6cc 100%); color: #333; }
+        .ouro { background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); color: #333; }
+        .diamante { background: linear-gradient(135deg, #b9f2ff 0%, #00d4ff 100%); }
+        .desafiante { background: linear-gradient(135deg, #ff00ff 0%, #8b00ff 100%); }
+        .lider { background: linear-gradient(135deg, #ff0000 0%, #ff6b6b 100%); }
+        .netherite { background: linear-gradient(135deg, #4a4a4a 0%, #1a1a1a 100%); }
+
+        /* Premium Profile Pic */
+        .profile-pic-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 30px auto;
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #00ff88;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.5);
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 60px rgba(0, 255, 136, 0.8);
+        }
+
+        .profile-pic-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+            font-size: 2em;
+        }
+
+        .profile-pic-container:hover .profile-pic-overlay {
+            opacity: 1;
+        }
+
+        /* Premium Link Item */
+        .link-item {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.3s;
+        }
+
+        .link-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .link-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95em;
+        }
+
+        /* Premium Navigation */
+        .menu-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .menu-btn {
+            padding: 15px 35px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-btn:hover, .menu-btn.active {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #0a0a0a;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+            border-color: transparent;
+        }
+
+        /* Premium Modal */
+        .pro-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 30px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            max-width: 600px;
+            width: 90%;
+            animation: modalEntry 0.5s ease;
+        }
+
+        @keyframes modalEntry {
+            0% { opacity: 0; transform: translate(-50%, -60%); }
+            100% { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .pro-price {
+            font-size: 4em;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .pro-features {
+            list-style: none;
+            padding: 30px 0;
+        }
+
+        .pro-features li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        .pro-features li:hover {
+            padding-left: 10px;
+            color: #00ff88;
+        }
+
+        .pro-features li:before {
+            content: "✓ ";
+            color: #00ff88;
+            font-weight: 700;
+            margin-right: 15px;
+            font-size: 1.3em;
+        }
+
+        /* Premium Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .shortened-link {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #0a0a0a;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.6);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .admin-panel {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .glass-card { padding: 30px; }
+            .logo { width: 70px; height: 70px; }
+            .menu-btn { padding: 12px 25px; font-size: 0.9em; }
+        }
+
+        /* Stats Counter */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div class="loading-text">Carregando Riquelme Encurta...</div>
+    </div>
+
+    <!-- Premium Particles Canvas -->
+    <canvas id="particlesCanvas"></canvas>
+    
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="https://files.catbox.moe/4lotr2.jpg" alt="Logo" class="logo">
+                <h1>RIQUELME ENCURTA</h1>
+            </div>
+            <p class="subtitle">O Encurtador Mais Premium do Brasil 🚀</p>
+        </header>
+
+        <!-- Login Screen -->
+        <div id="loginScreen">
+            <div class="glass-card">
+                <h2 style="text-align: center; margin-bottom: 40px; font-size: 2em; background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Acesso Exclusivo</h2>
+                <div class="input-group">
+                    <label>👤 Nome Completo</label>
+                    <input type="text" id="loginName" placeholder="Digite seu nome">
+                </div>
+                <div class="input-group">
+                    <label>📱 WhatsApp</label>
+                    <input type="tel" id="loginWhatsapp" placeholder="(00) 00000-0000">
+                </div>
+                <div class="input-group">
+                    <label>🔒 Senha</label>
+                    <input type="password" id="loginPassword" placeholder="Digite sua senha">
+                </div>
+                <button class="btn" onclick="handleLogin()">Entrar Agora</button>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="mainApp" class="hidden">
+            <div class="menu-nav">
+                <button class="menu-btn active" onclick="showSection('dashboard')">🏠 Dashboard</button>
+                <button class="menu-btn" onclick="showSection('links')">🔗 Meus Links</button>
+                <button class="menu-btn" onclick="showSection('profile')">👤 Perfil</button>
+                <button class="menu-btn" onclick="showSection('faq')">❓ FAQ</button>
+                <button class="menu-btn" onclick="showSection('admin')" id="adminBtn" style="display: none;">⚙️ Admin</button>
+                <button class="menu-btn btn-secondary" onclick="showProModal()">💎 PRO</button>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboard" class="section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalViews">0</div>
+                        <div class="stat-label">Total de Views</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalLinks">0</div>
+                        <div class="stat-label">Links Criados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="rankingPosition">1º</div>
+                        <div class="stat-label">Posição</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 30px; font-size: 2em; background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔗 Encurtar Link</h2>
+                    <div class="input-group">
+                        <label>Cole seu link aqui</label>
+                        <input type="url" id="urlInput" placeholder="https://exemplo.com/seu-link-muito-longo">
+                    </div>
+                    <button class="btn" onclick="shortenLink()">Encurtar Agora</button>
+                    
+                    <div id="resultArea" class="hidden">
+                        <div class="shortened-link" id="shortLink"></div>
+                        <button class="copy-btn" onclick="copyLink()">📋 Copiar Link</button>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 style="text-align: center; font-size: 1.8em; margin-bottom: 20px;">🏆 Seu Ranking Atual</h3>
+                    <div style="text-align: center;">
+                        <span class="ranking-badge bronze" id="userRanking">Bronze</span>
+                        <p style="margin-top: 30px; font-size: 1.2em; color: rgba(255, 255, 255, 0.8);">Continue compartilhando para subir de nível!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Links -->
+            <div id="links" class="section hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 30px; font-size: 2em; background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📊 Meus Links Encurtados</h2>
+                    <div id="linksList"></div>
+                </div>
+            </div>
+
+            <!-- Profile -->
+            <div id="profile" class="section hidden">
+                <div class="glass-card">
+                    <h2 style="text-align: center; margin-bottom: 30px; font-size: 2em; background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">👤 Meu Perfil</h2>
+                    
+                    <input type="file" id="profilePicInput" accept="image/*" style="display: none;" onchange="updateProfilePic()">
+                    <div class="profile-pic-container" onclick="document.getElementById('profilePicInput').click()">
+                        <img src="https://via.placeholder.com/150" class="profile-pic" id="profilePic">
+                        <div class="profile-pic-overlay">📷</div>
+                    </div>
+                    <p style="text-align: center; color: rgba(255, 255, 255, 0.6); margin-bottom: 30px;">Clique na foto para alterar</p>
+                    
+                    <div class="input-group">
+                        <label>Nome</label>
+                        <input type="text" id="profileName" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label>WhatsApp</label>
+                        <input type="tel" id="profileWhatsapp" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label>Ranking</label>
+                        <input type="text" id="profileRanking" readonly>
+                    </div>
+                    <button class="btn btn-secondary" onclick="logout()">Sair da Conta</button>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div id="faq" class="section hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 30px; font-size: 2em; background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">❓ Perguntas Frequentes</h2>
+                    
+                    <div style="margin: 30px 0;">
+                        <h3 style="color: #00ff88; margin-bottom: 15px;">🏆 Como funciona o sistema de ranking?</h3>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">Quanto mais visualizações seus links recebem, maior seu ranking:</p>
+                        <ul style="list-style: none; padding: 20px 0;">
+                            <li style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">🥉 <strong style="color: #cd7f32;">Bronze:</strong> 0 a 100 visualizações</li>
+                            <li style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">🥈 <strong style="color: #e5e4e2;">Platina:</strong> 101 a 250 visualizações</li>
+                            <li style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">🥇 <strong style="color: #ffd700;">Ouro:</strong> 251 a 500 visualizações</li>
+                            <li style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">💎 <strong style="color: #00d4ff;">Diamante:</strong> 501 a 1.000 visualizações</li>
+                            <li style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">🏆 <strong style="color: #ff00ff;">Desafiante:</strong> 1.001 a 5.000 visualizações</li>
+                            <li style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">👑 <strong style="color: #ff0000;">Líderes Dos Links:</strong> 5.001 a 10.000 visualizações</li>
+                            <li style="padding: 10px 0;">⚫ <strong style="color: #4a4a4a;">Netherite:</strong> 10.001 a 20.000 visualizações</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin: 30px 0;">
+                        <h3 style="color: #00ff88; margin-bottom: 15px;">💎 O que é a conta PRO?</h3>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">Por apenas <strong style="color: #00ff88;">R$ 5,40/mês</strong> você tem acesso a recursos premium: sem anúncios, suporte prioritário em até 8 horas, estatísticas avançadas e muito mais!</p>
+                    </div>
+                    
+                    <div style="margin: 30px 0;">
+                        <h3 style="color: #00ff88; margin-bottom: 15px;">🔗 Como compartilhar meus links?</h3>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">Após encurtar um link, basta copiar e compartilhar em suas redes sociais, WhatsApp, Telegram ou onde preferir! Cada visualização conta para seu ranking.</p>
+                    </div>
+                    
+                    <div style="margin: 30px 0;">
+                        <h3 style="color: #00ff88; margin-bottom: 15px;">🛡️ Meus links são seguros?</h3>
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">Sim! Todos os links são verificados e protegidos contra malícia. Não permitimos encurtamento malicioso ou recursivo do próprio domínio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="admin" class="section hidden">
+                <div class="glass-card admin-panel">
+                    <h2 style="text-align: center; margin-bottom: 30px; font-size: 2em; color: #ff6b6b;">⚙️ Painel Administrativo</h2>
+                    <div class="glass-card">
+                        <h3 style="color: #ff6b6b;">Gerenciar Rankings</h3>
+                        <div class="input-group">
+                            <label>Selecionar Usuário</label>
+                            <select id="adminUserSelect">
+                                <option>Selecione um usuário</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Novo Ranking</label>
+                            <select id="adminRankingSelect">
+                                <option value="bronze">🥉 Bronze</option>
+                                <option value="platina">🥈 Platina</option>
+                                <option value="ouro">🥇 Ouro</option>
+                                <option value="diamante">💎 Diamante</option>
+                                <option value="desafiante">🏆 Desafiante</option>
+                                <option value="lider">👑 Líder Dos Links</option>
+                                <option value="netherite">⚫ Netherite</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Título Personalizado (Opcional)</label>
+                            <input type="text" id="adminCustomTitle" placeholder="Ex: Mestre dos Links">
+                        </div>
+                        <button class="btn" onclick="updateUserRanking()">Atualizar Ranking</button>
+                    </div>
+                    
+                    <div class="glass-card" style="margin-top: 20px;">
+                        <h3 style="color: #ff6b6b;">Estatísticas Gerais</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="adminTotalUsers">0</div>
+                                <div class="stat-label">Usuários Total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="adminTotalLinks">0</div>
+                                <div class="stat-label">Links Total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="adminTotalViews">0</div>
+                                <div class="stat-label">Views Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        ☣ COPYRIGHT 𝙍𝙄𝙌𝙐𝙀𝙇𝙈𝙀 𝘿𝙀𝙎𝙄𝙂𝙉𝙀𝙍 ☣
+    </div>
+
+    <script>
+        // Premium Particles System
+        const canvas = document.getElementById('particlesCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 150;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(0, 255, 136, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = 'rgba(0, 255, 136, 0.5)';
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 120) {
+                        ctx.strokeStyle = `rgba(0, 255, 136, ${0.2 - distance / 600})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            connectParticles();
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        initParticles();
+        animateParticles();
+
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 2000);
+        });
+
+        // User Data Storage
+        let currentUser = null;
+        let users = {};
+        let userLinks = {};
+        const ADMIN_IP = '201.182.196.250';
+        let proModalShown = false;
+
+        // Check if user is admin
+        function checkAdmin() {
+            // Para ativar o painel admin, detecte o IP do usuário (simulado aqui)
+            // Em produção, isso seria feito no backend
+            const userIP = '201.182.196.250'; // Simule seu IP aqui para testar
+            if (userIP === ADMIN_IP) {
+                document.getElementById('adminBtn').style.display = 'block';
+                updateAdminStats();
+            }
+        }
+
+        // Login Handler
+        function handleLogin() {
+            const name = document.getElementById('loginName').value.trim();
+            const whatsapp = document.getElementById('loginWhatsapp').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!name || !whatsapp || !password) {
+                showNotification('⚠️ Por favor, preencha todos os campos!', 'error');
+                return;
+            }
+
+            if (whatsapp.length < 10) {
+                showNotification('⚠️ WhatsApp inválido!', 'error');
+                return;
+            }
+
+            const userId = whatsapp;
+            if (!users[userId]) {
+                users[userId] = {
+                    name: name,
+                    whatsapp: whatsapp,
+                    password: password,
+                    ranking: 'bronze',
+                    views: 0,
+                    profilePic: 'https://via.placeholder.com/150',
+                    isPro: false,
+                    customTitle: null,
+                    createdAt: new Date().toISOString()
+                };
+                showNotification('✅ Conta criada com sucesso!', 'success');
+            } else {
+                if (users[userId].password !== password) {
+                    showNotification('❌ Senha incorreta!', 'error');
+                    return;
+                }
+                showNotification('✅ Bem-vindo de volta!', 'success');
+            }
+
+            currentUser = userId;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            
+            updateProfile();
+            updateStats();
+            checkAdmin();
+            
+            // Show PRO modal after 15 seconds
+            setTimeout(() => {
+                if (!users[currentUser].isPro && !proModalShown) {
+                    showProModal();
+                    proModalShown = true;
+                }
+            }, 15000);
+
+            // Random PRO modal every 5 minutes
+            setInterval(() => {
+                if (!users[currentUser].isPro && Math.random() > 0.6) {
+                    showProModal();
+                }
+            }, 300000);
+        }
+
+        // Update Profile Display
+        function updateProfile() {
+            const user = users[currentUser];
+            document.getElementById('profileName').value = user.name;
+            document.getElementById('profileWhatsapp').value = user.whatsapp;
+            document.getElementById('profileRanking').value = user.customTitle || getRankingName(user.ranking);
+            document.getElementById('profilePic').src = user.profilePic;
+            
+            const rankingBadge = document.getElementById('userRanking');
+            rankingBadge.className = 'ranking-badge ' + user.ranking;
+            rankingBadge.textContent = user.customTitle || getRankingName(user.ranking);
+        }
+
+        // Update Stats
+        function updateStats() {
+            const user = users[currentUser];
+            const links = userLinks[currentUser] || [];
+            
+            document.getElementById('totalViews').textContent = user.views.toLocaleString();
+            document.getElementById('totalLinks').textContent = links.length;
+            document.getElementById('rankingPosition').textContent = calculatePosition() + 'º';
+        }
+
+        // Calculate Position
+        function calculatePosition() {
+            const allUsers = Object.values(users);
+            allUsers.sort((a, b) => b.views - a.views);
+            const position = allUsers.findIndex(u => u.whatsapp === currentUser) + 1;
+            return position;
+        }
+
+        // Profile Picture Update
+        function updateProfilePic() {
+            const file = document.getElementById('profilePicInput').files[0];
+            if (file) {
+                if (file.size > 5000000) {
+                    showNotification('⚠️ Imagem muito grande! Máximo 5MB', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    users[currentUser].profilePic = e.target.result;
+                    document.getElementById('profilePic').src = e.target.result;
+                    showNotification('✅ Foto atualizada com sucesso!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Shorten Link
+        function shortenLink() {
+            const url = document.getElementById('urlInput').value.trim();
+            
+            if (!url) {
+                showNotification('⚠️ Por favor, insira um link válido!', 'error');
+                return;
+            }
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                showNotification('⚠️ O link deve começar com http:// ou https://', 'error');
+                return;
+            }
+
+            // Prevent malicious self-shortening
+            const currentDomain = window.location.hostname;
+            if (url.includes('riquelmeencurta') || url.includes(currentDomain)) {
+                showNotification('🚫 Não é permitido encurtar links do próprio sistema!', 'error');
+                return;
+            }
+
+            const shortCode = generateShortCode();
+            const shortUrl = `${window.location.origin}/${shortCode}`;
+            
+            if (!userLinks[currentUser]) {
+                userLinks[currentUser] = [];
+            }
+            
+            userLinks[currentUser].push({
+                original: url,
+                short: shortUrl,
+                code: shortCode,
+                views: 0,
+                created: new Date().toISOString()
+            });
+
+            document.getElementById('shortLink').textContent = shortUrl;
+            document.getElementById('resultArea').classList.remove('hidden');
+            document.getElementById('urlInput').value = '';
+            
+            updateLinksList();
+            updateStats();
+            showNotification('✅ Link encurtado com sucesso!', 'success');
+        }
+
+        // Generate Short Code
+        function generateShortCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            // Check if code already exists
+            const allLinks = Object.values(userLinks).flat();
+            if (allLinks.some(link => link.code === code)) {
+                return generateShortCode();
+            }
+            return code;
+        }
+
+        // Copy Link
+        function copyLink() {
+            const link = document.getElementById('shortLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                showNotification('✅ Link copiado com sucesso!', 'success');
+            }).catch(() => {
+                showNotification('❌ Erro ao copiar link', 'error');
+            });
+        }
+
+        // Update Links List
+        function updateLinksList() {
+            const container = document.getElementById('linksList');
+            const links = userLinks[currentUser] || [];
+            
+            if (links.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.5); font-size: 1.2em; padding: 40px 0;">Você ainda não tem links encurtados. 🔗<br><small style="font-size: 0.8em;">Comece agora mesmo!</small></p>';
+                return;
+            }
+            
+            container.innerHTML = links.reverse().map((link, index) => `
+                <div class="link-item" style="animation: slideIn 0.5s ease ${index * 0.1}s both;">
+                    <strong style="color: #00ff88;">Link Encurtado:</strong> <span style="color: #00d4ff;">${link.short}</span><br>
+                    <strong style="color: #00ff88;">Original:</strong> <span style="word-break: break-all;">${link.original}</span>
+                    <div class="link-stats">
+                        <span>👁️ <strong>${link.views.toLocaleString()}</strong> visualizações</span>
+                        <span>📅 ${new Date(link.created).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    <button class="copy-btn" style="margin-top: 10px; width: 100%;" onclick="copySpecificLink('${link.short}')">📋 Copiar Este Link</button>
+                </div>
+            `).join('');
+        }
+
+        // Copy Specific Link
+        function copySpecificLink(link) {
+            navigator.clipboard.writeText(link).then(() => {
+                showNotification('✅ Link copiado!', 'success');
+            });
+        }
+
+        // Get Ranking Name
+        function getRankingName(ranking) {
+            const names = {
+                bronze: 'Bronze',
+                platina: 'Platina',
+                ouro: 'Ouro',
+                diamante: 'Diamante',
+                desafiante: 'Desafiante',
+                lider: 'Líder Dos Links',
+                netherite: 'Netherite'
+            };
+            return names[ranking] || 'Bronze';
+        }
+
+        // Calculate Ranking
+        function calculateRanking(views) {
+            if (views >= 20000) return 'netherite';
+            if (views >= 10000) return 'lider';
+            if (views >= 5000) return 'desafiante';
+            if (views >= 1000) return 'diamante';
+            if (views >= 500) return 'ouro';
+            if (views >= 250) return 'platina';
+            return 'bronze';
+        }
+
+        // Auto Update Ranking
+        function autoUpdateRanking() {
+            const user = users[currentUser];
+            const newRanking = calculateRanking(user.views);
+            if (newRanking !== user.ranking) {
+                user.ranking = newRanking;
+                updateProfile();
+                showNotification(`🎉 Parabéns! Você subiu para ${getRankingName(newRanking)}!`, 'success');
+            }
+        }
+
+        // Show Section
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(section).classList.remove('hidden');
+            
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (section === 'links') {
+                updateLinksList();
+            }
+            if (section === 'admin') {
+                updateAdminStats();
+                populateAdminUserList();
+            }
+        }
+
+        // Show PRO Modal
+        function showProModal() {
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div class="overlay" onclick="this.parentElement.remove()"></div>
+                <div class="pro-modal">
+                    <h2 style="text-align: center; background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🚀 RIQUELME ENCURTA PRO</h2>
+                    <div class="pro-price">R$ 5,40<span style="font-size: 0.4em; opacity: 0.7;">/mês</span></div>
+                    <ul class="pro-features">
+                        <li>Sem anúncios irritantes</li>
+                        <li>Suporte prioritário em até 8 horas</li>
+                        <li>Estatísticas avançadas e gráficos</li>
+                        <li>Links personalizados customizados</li>
+                        <li>Acesso a recursos exclusivos VIP</li>
+                        <li>Badge PRO no seu perfil</li>
+                        <li>Limite aumentado de links</li>
+                    </ul>
+                    <button class="btn" onclick="buyPro()">💳 Comprar PRO Agora</button>
+                    <button class="btn btn-secondary" style="margin-top: 15px;" onclick="this.closest('div').parentElement.remove()">Talvez Mais Tarde</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Buy PRO
+        function buyPro() {
+            const user = users[currentUser];
+            const message = `Olá! Sou *${user.name}* e gostaria de adquirir o *Riquelme Encurta PRO* 💎
+
+📱 WhatsApp: ${user.whatsapp}
+📊 Ranking Atual: ${getRankingName(user.ranking)}
+👁️ Total de Views: ${user.views}
+
+Aguardo retorno para realizar o pagamento!`;
+            
+            const whatsappUrl = `https://wa.me/5574999620423?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            showNotification('📱 Redirecionando para WhatsApp...', 'success');
+        }
+
+        // Admin: Update Admin Stats
+        function updateAdminStats() {
+            const totalUsers = Object.keys(users).length;
+            const totalLinks = Object.values(userLinks).reduce((acc, links) => acc + links.length, 0);
+            const totalViews = Object.values(users).reduce((acc, user) => acc + user.views, 0);
+
+            document.getElementById('adminTotalUsers').textContent = totalUsers;
+            document.getElementById('adminTotalLinks').textContent = totalLinks;
+            document.getElementById('adminTotalViews').textContent = totalViews.toLocaleString();
+        }
+
+        // Admin: Populate User List
+        function populateAdminUserList() {
+            const select = document.getElementById('adminUserSelect');
+            select.innerHTML = '<option>Selecione um usuário</option>';
+            
+            Object.values(users).forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.whatsapp;
+                option.textContent = `${user.name} - ${getRankingName(user.ranking)} (${user.views} views)`;
+                select.appendChild(option);
+            });
+        }
+
+        // Admin: Update User Ranking
+        function updateUserRanking() {
+            const selectedUser = document.getElementById('adminUserSelect').value;
+            const newRanking = document.getElementById('adminRankingSelect').value;
+            const customTitle = document.getElementById('adminCustomTitle').value.trim();
+
+            if (selectedUser === 'Selecione um usuário') {
+                showNotification('⚠️ Selecione um usuário primeiro!', 'error');
+                return;
+            }
+
+            users[selectedUser].ranking = newRanking;
+            if (customTitle) {
+                users[selectedUser].customTitle = customTitle;
+            } else {
+                users[selectedUser].customTitle = null;
+            }
+
+            showNotification(`✅ Ranking de ${users[selectedUser].name} atualizado para ${customTitle || getRankingName(newRanking)}!`, 'success');
+            updateAdminStats();
+            populateAdminUserList();
+
+            if (selectedUser === currentUser) {
+                updateProfile();
+            }
+        }
+
+        // Show Notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 20px 30px;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #00ff88 0%, #00d4ff 100%)' : 'linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)'};
+                color: ${type === 'success' ? '#0a0a0a' : '#fff'};
+                border-radius: 15px;
+                font-weight: 600;
+                z-index: 10000;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                animation: slideInRight 0.5s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('🚪 Deseja realmente sair da sua conta?')) {
+                currentUser = null;
+                proModalShown = false;
+                document.getElementById('mainApp').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('loginName').value = '';
+                document.getElementById('loginWhatsapp').value = '';
+                document.getElementById('loginPassword').value = '';
+                showNotification('👋 Até logo!', 'success');
+            }
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(-30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes slideOutRight {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
